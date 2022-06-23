@@ -38,7 +38,7 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, filter_routers = []):
         for item in filter_routers:
             assert isinstance(item, FilterAPIRouter), "All objects passed to CustomFilterMiddleware must be of type FilterAPIRouter"
-        self.filter_routers :array = filter_routers
+        self.filter_routers: array = filter_routers
         super().__init__(app)
     
     
@@ -51,7 +51,7 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
             if (not isinstance(filter_request, types.FunctionType)):
                 raise HTTPException(status_code=500, detail= "Internal servor error due to filters")
             request = filter_request(request)
-            assert(isinstance(request, Request))
+            assert(isinstance(request, Request)); "All objects returned from a filter must of type Request. Use an HTTPException to stop flow or return a response."
         return request
         
 

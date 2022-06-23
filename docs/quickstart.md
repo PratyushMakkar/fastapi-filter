@@ -12,36 +12,28 @@ async def HelloWorld():
     return "Hello World"
 ```
 
-To include a filter that logs the datetime for all incoming requests to <kbd>"/"</kbd>, we would first extend the ```APIRoute``` class and override the ```get_route_handler()``` method. Further documentation can be found on the [FastAPI website](https://fastapi.tiangolo.com/advanced/custom-request-and-route/).  
+Creating filters is an incredibly simple process. The filter must be of type <kbd>FunctionType</kbd> and accept a parameter of <kbd>request</kbd> which is of type <kbd>fastapi.Request</kbd> .  
 
 ```python
-import time
-from typing import Callable
-
-from fastapi import APIRouter, FastAPI, Request, Response
-from fastapi.routing import APIRoute
-
-class TimeRoute(APIRoute):
-
-    def get_route_handler(self) -> Callable:
-        async def custom_route_handle(request: Request)-> Response:
-            current_time = time.time()
-            print("Incoming request at time:{0}".format(current_time))
-            return request
-
-        return custom_route_handler
+# The method takes an object request of type fastapi.Request
+def TimeRouteFilter(request: Request) -> Request:
+    time = datetime.now()
+    print("The time of incoming request to '/' is {0}".format(time))
+    return request           #All filters must return an object of type Request
 ```
+
+
 After our filter is created, we can register it with an instance of ```FilterAPIRouter``` which will overlook all incoming requests with the prefix <kbd>"/"</kbd> and implement the neccesary filters. 
 
 ```python
 from fastapi-filter.filter import FilterAPIRouter
 
 my_filter = FilterAPIRouter(prefix = "/")
-            .includeFilterOnMethod(method = "HelloWorld", filter = TimeRoute)
+            .includeFilterOnMethod(method = "HelloWorld", filter = TimeRouteFilter)
             .includeFilterOnMethod(...)
 ```
 
-Alternatively a decorator can be used to register <kbd>TimerRouter</kbd>
+Alternatively a decorator can be used to register <kbd>TimeRouteFilter</kbd>
 
 ```python
 import fastapi
@@ -50,7 +42,7 @@ my_filter = FilterAPIRouter(prefix = "/")
 
 app = FastAPI()
 
-@my_filter.filter(filters = [TimeRoute])
+@my_filter.filter(filters = [TimeRouteFilter])
 @app.get("/")
 async def HelloWorld():
     return "Hello World"
@@ -63,7 +55,7 @@ import fastapi
 from fastapi-filter.filter import FilterAPIRouter
 
 my_filter = FilterAPIRouter(prefix = "/")
-            .includeFilterOnMethod(method = "HelloWorld", filter = TimeRoute)
+            .includeFilterOnMethod(method = "HelloWorld", filter = TimeRouteFilter)
             .includeFilterOnMethod(...)
 
 app_middleware = [
