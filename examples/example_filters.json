@@ -1,0 +1,22 @@
+{
+    "global_filters": [
+        "Filter_class1",
+        "Filter_class2"
+    ],
+    "method_level_filters": [
+        {
+            "path": "string_path",
+            "filters": [
+                "filter_class3",
+                "filter_class4"
+            ]
+        },
+        {
+            "path": "string_path2",
+            "filters": [
+                "filter_class2",
+                "filter_class4"
+            ]
+        }
+    ]
+}
