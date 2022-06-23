@@ -31,8 +31,8 @@ class FilterAPIRouter:
         self, 
         prefix: str,
         enabled: bool = True,
-        _globalFilters: array = [],
-        _methodFilters: dict = {},
+        global_filters: array = [],
+        method_filters: dict = {},
         configFile = None,
     ) -> None:
         if (not configFile is None):
@@ -42,14 +42,14 @@ class FilterAPIRouter:
             elif (isinstance(configFile, type(File))):
                 self.globalFilters, self.methodFilters = loadFiltersFromFile(configFile)
 
-        self.globalFilters.extend(_globalFilters)
+        self.globalFilters.extend(global_filters)
     
-        for key in _methodFilters:
+        for key in method_filters:
             if (not key in self.methodFilters):
-                self.methodFilters[key] = _methodFilters[key]
+                self.methodFilters[key] = method_filters[key]
             else:
                 assert isinstance(self.methodFilters[key], array.ArrayType); "The method filter with key: {0} was not of type array".format(key)
-                self.methodFilters[key].extend(_methodFilters[key])
+                self.methodFilters[key].extend(method_filters[key])
 
         self.prefix = prefix
         self.enabled = enabled

@@ -8,7 +8,7 @@
             "path": "string_path",
             "filters": [
                 "filter_class3",
-                "filter_class4"
+                "Request.class"
             ]
         },
         {
