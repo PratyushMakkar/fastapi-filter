@@ -2,6 +2,7 @@ import array
 from ast import Raise
 from enum import Enum
 import logging
+import types
 
 from tracemalloc import Filter
 from urllib import request
@@ -35,6 +36,9 @@ class FilterAPIRouter:
         method_filters: dict = {},
         configFile = None,
     ) -> None:
+
+        self.globalFilters = []
+        self.methodFilters = {}
         if (not configFile is None):
             if (isinstance(configFile, str)):
                 with open(configFile, 'r') as file:
@@ -57,10 +61,10 @@ class FilterAPIRouter:
     def filter(self, path: str, filter_classes: array = []) -> Callable:
         return print               #TODO
 
-    def includeFilterOnMethod(self, method: str, filter: APIRoute):
-        assert isinstance(filter, APIRoute); "The implemented filter must be of type: APIRoute"
+    def includeFilterOnMethod(self, method: str, filter: callable):
+        assert isinstance(filter, types.FunctionType); "The implemented filter must be of type: Function"
         if (not method in self.methodFilters):
-            self.methodFilters = [filter]
+            self.methodFilters[method] = [filter]
         else:
             _array = self.methodFilters[method]
             assert isinstance(_array, array.ArrayType); "methodFilters for the path {0} is not of type Array".format(method)
@@ -68,7 +72,8 @@ class FilterAPIRouter:
 
         return self
 
-    def includeGlobalFilter(self, filter: APIRoute):
+    def includeGlobalFilter(self, filter: types.FunctionType): 
+        assert isinstance(filter, types.FunctionType); "The implemented filter must be of type: Function"
         assert isinstance(self.globalFilters, array.ArrayType); "The global filters for the FilterAPIRouter is not of type Array"
         self.globalFilters.append(filter)
         return self

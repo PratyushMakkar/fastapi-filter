@@ -3,6 +3,7 @@ from cgitb import handler
 import logging
 import re
 import string
+import types
 import traceback
 from typing import Callable
 from urllib import request
@@ -47,13 +48,10 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
             return request
 
         for filter_request in filters:
-            if (not isinstance(filter_request, APIRoute)):
-                return Response(status_code=500)
-    
-            try:
-                request = filter_request(request.scope, request.receive)
-            except StarletteHTTPException as err:
-                return _handleHTTPException(err)
+            if (not isinstance(filter_request, types.FunctionType)):
+                raise HTTPException(status_code=500, detail= "Internal servor error due to filters")
+            request = filter_request(request)
+            assert(isinstance(request, Request))
         return request
         
 
@@ -117,14 +115,12 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         filters_array = CustomFilterMiddleware._match(filter_route, handler= handler_name)
-        print("DUCKY found the filters :)")
-        request = CustomFilterMiddleware._implementFilters(request, filters_array)
-        print("DUCKY implemented all the filters")
-        
-        if isinstance(request, Response):
-            print("Ducky sees response?")
-            return request
+
+        try:
+            request = CustomFilterMiddleware._implementFilters(request, filters_array)
+        except HTTPException as err:
+            return _handleHTTPException(err)
         
         response = await call_next(request)
-        print("DUCKY got response?")
+        
         return response

@@ -39,11 +39,5 @@ class HTTPException(StarletteHTTPException):
         super().__init__(status_code=status_code, detail=detail, headers=headers)
 
 def _handleHTTPException(http_exception: StarletteHTTPException):
-    return Response(status_code=400)
-    '''
-    return Response(
-        status_code=http_exception.status_code,
-        headers= http_exception.headers,
-        content= http_exception.detail
-    )  
-    '''
+    return Response(status_code=http_exception.status_code)
+    
