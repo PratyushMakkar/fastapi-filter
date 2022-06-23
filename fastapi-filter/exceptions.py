@@ -1,6 +1,7 @@
 from typing import Optional
 from fastapi import APIRouter, Response
 from starlette.exceptions import HTTPException as StarletteHTTPException
+
 class FilterAPIRouterError(Exception):
 
     def __init__(self, router_name: str, msg= None):
@@ -28,7 +29,6 @@ class MissingFilterConfigFileError(FilterAPIRouterError):
             .format(router_name)
         )
 
-
 class HTTPException(StarletteHTTPException):
     def __init__(
         self,
@@ -38,5 +38,12 @@ class HTTPException(StarletteHTTPException):
     ) -> None:
         super().__init__(status_code=status_code, detail=detail, headers=headers)
 
-def _handleHTTPException(http_excpetion: StarletteHTTPException):
-    return Response(status_code=401)  #TODO
+def _handleHTTPException(http_exception: StarletteHTTPException):
+    return Response(status_code=400)
+    '''
+    return Response(
+        status_code=http_exception.status_code,
+        headers= http_exception.headers,
+        content= http_exception.detail
+    )  
+    '''

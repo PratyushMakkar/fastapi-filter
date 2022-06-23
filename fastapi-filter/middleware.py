@@ -21,7 +21,6 @@ from urllib.parse import urlparse
 
 from filter import FilterAPIRouter
 
-
 def _prepareRequestURL(request_url: str) -> dict:
         url_dict = {}
         parsed = urlparse(str(request_url))
@@ -118,11 +117,14 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         filters_array = CustomFilterMiddleware._match(filter_route, handler= handler_name)
-        
+        print("DUCKY found the filters :)")
         request = CustomFilterMiddleware._implementFilters(request, filters_array)
-        if isinstance(request, Response):
-                return request
-
-        response = await call_next(request)
-        return response
+        print("DUCKY implemented all the filters")
         
+        if isinstance(request, Response):
+            print("Ducky sees response?")
+            return request
+        
+        response = await call_next(request)
+        print("DUCKY got response?")
+        return response

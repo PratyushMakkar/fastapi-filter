@@ -31,22 +31,25 @@ class FilterAPIRouter:
         self, 
         prefix: str,
         enabled: bool = True,
-        globalFilters: array = [],
-        methodFilters: dict = {},
-        useConfig: bool = False,
+        _globalFilters: array = [],
+        _methodFilters: dict = {},
         configFile = None,
     ) -> None:
-        if (useConfig):
+        if (not configFile is None):
             if (isinstance(configFile, str)):
                 with open(configFile, 'r') as file:
                     self.globalFilters, self.methodFilters = loadFiltersFromFile(file)
             elif (isinstance(configFile, type(File))):
                 self.globalFilters, self.methodFilters = loadFiltersFromFile(configFile)
+
+        self.globalFilters.extend(_globalFilters)
+    
+        for key in _methodFilters:
+            if (not key in self.methodFilters):
+                self.methodFilters[key] = _methodFilters[key]
             else:
-                raise MissingFilterConfigFileError("Name")    #TOdo
-        else:
-            self.methodFilters = methodFilters
-            self.globalFilters = checkGlobalFilters(globalFilters)
+                assert isinstance(self.methodFilters[key], array.ArrayType); "The method filter with key: {0} was not of type array".format(key)
+                self.methodFilters[key].extend(_methodFilters[key])
 
         self.prefix = prefix
         self.enabled = enabled
