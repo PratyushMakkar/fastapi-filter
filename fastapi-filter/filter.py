@@ -57,18 +57,21 @@ class FilterAPIRouter:
     def filter(self, path: str, filter_classes: array = []) -> Callable:
         return print               #TODO
 
-    def _addMethodLevelFilter(self, path: str, filter: Request):
-        try:
-            if (not isinstance(self.methodFilters[path]), array.ArrayType):
-                raise TypeError("self.methodFilters[{0}] is not of type Array".format(path))
-            self.methodFilters[path].append(filter)
-        except KeyError as err:
-            logging.debug("Path: {0} was not recognized by the router and the filter could not be added".format(path))
-            #TODO implement logging instead of printing
+    def includeFilterOnMethod(self, method: str, filter: APIRoute):
+        assert isinstance(filter, APIRoute); "The implemented filter must be of type: APIRoute"
+        if (not method in self.methodFilters):
+            self.methodFilters = [filter]
+        else:
+            _array = self.methodFilters[method]
+            assert isinstance(_array, array.ArrayType); "methodFilters for the path {0} is not of type Array".format(method)
+            self.methodFilters[method].append(filter)
 
-    def _addGlobalFilter(self, filter: Request):
+        return self
+
+    def includeGlobalFilter(self, filter: APIRoute):
+        assert isinstance(self.globalFilters, array.ArrayType); "The global filters for the FilterAPIRouter is not of type Array"
         self.globalFilters.append(filter)
-        return self.globalFilters
+        return self
 
     
 
