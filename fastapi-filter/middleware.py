@@ -63,7 +63,7 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
         if (hasattr(filter, "methodFilters")):
             try:
                 filters_array = filter.methodFilters[handler] 
-                return filters_array
+                return filters_array.extend(filter.globalFilters)
             except KeyError as err:
                 logging.debug("The method: {0} could not be matched to any filters".format(handler))
                 print(traceback.print_exception(err))

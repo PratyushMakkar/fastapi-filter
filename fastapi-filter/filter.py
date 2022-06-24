@@ -58,8 +58,8 @@ class FilterAPIRouter:
         self.prefix = prefix
         self.enabled = enabled
 
-    def filter(self, path: str, filter_classes: array = []) -> Callable:
-        return print               #TODO
+    def enable(self, path: str, filter_classes: array = []) -> Callable:
+        return print                                                        #TODO
 
     def includeFilterOnMethod(self, method: str, filter: callable):
         assert isinstance(filter, types.FunctionType); "The implemented filter must be of type: Function"

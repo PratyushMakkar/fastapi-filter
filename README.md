@@ -46,11 +46,16 @@ Alternatively a decorator can be used to register <kbd>TimeRouteFilter</kbd>
 ```python
 import fastapi
 
+def TimeRouteFilter(request: Request) -> Request:
+    time = datetime.now()
+    print("The time of incoming request to '/' is {0}".format(time))
+    return request
+    
 my_filter = FilterAPIRouter(prefix = "/")
 
 app = FastAPI()
 
-@my_filter.filter(filters = [TimeRouteFilter])
+@my_filter.enable(filters = [TimeRouteFilter])
 @app.get("/")
 async def HelloWorld():
     return "Hello World"
