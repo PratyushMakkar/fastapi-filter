@@ -2,6 +2,7 @@ from array import array
 from cgitb import handler
 import logging
 import re
+from sre_parse import expand_template
 import string
 import types
 import traceback
@@ -63,7 +64,8 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
         if (hasattr(filter, "methodFilters")):
             try:
                 filters_array = filter.methodFilters[handler] 
-                return filters_array.extend(filter.globalFilters)
+                filters_array.extend(filter.globalFilters)
+                return filters_array
             except KeyError as err:
                 logging.debug("The method: {0} could not be matched to any filters".format(handler))
                 print(traceback.print_exception(err))
@@ -86,11 +88,12 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next:  RequestResponseEndpoint) -> Response:
         app: Starlette = request.app
         request_url = request.url
-
+        print(request_url)
         for route in app.routes:
             match, _ = route.matches(request.scope)
             if match == Match.FULL and hasattr(route, "endpoint"):
                 handler = route.endpoint
+                print(handler)
                 break
             handler = None
         
@@ -101,6 +104,7 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
 
         filter_router = None
         expected_prefix = _prepareRequestURL(request_url)['prefix']
+        print(expected_prefix)
 
         try:
             for filter_route in self.filter_routers:
