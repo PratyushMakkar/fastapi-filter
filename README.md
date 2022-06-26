@@ -50,7 +50,7 @@ def TimeRouteFilter(request: Request) -> Request:
     time = datetime.now()
     print("The time of incoming request to '/' is {0}".format(time))
     return request
-    
+
 my_filter = FilterAPIRouter(prefix = "/")
 
 app = FastAPI()
@@ -81,7 +81,9 @@ app = FastAPI(middleware=app_middleware)
 async def HelloWorld():
     return "Hello World"
 ```
-## :hammer_and_wrench: Contributing to the project
+## Documentation
+1. 
+1. ## :hammer_and_wrench: Contributing to the project
 If you would like to contribute to the project, feel free to create a pull request. Make sure that all documentation is present for any changes.  
 ## :scroll: License
 
