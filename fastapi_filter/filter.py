@@ -70,9 +70,11 @@ class FilterAPIRouter:
 
         return self
 
-    def enable(self, function, filter_classes: array = []) -> Callable:
-        for filter in filter_classes:
-            self.includeFilterOnMethod(function, filter)
+    def InsertMethodLevelFilter(self, filter_classes: array = []) -> Callable:
+        def FilteredMethod(function):
+            for filter in filter_classes:
+                self.includeFilterOnMethod(function.__name__, filter)
+        return FilteredMethod
 
     def includeGlobalFilter(self, filter: types.FunctionType): 
         assert isinstance(filter, types.FunctionType); "The implemented filter must be of type: Function"
