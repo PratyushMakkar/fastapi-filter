@@ -55,7 +55,7 @@ class FilterAPIRouter:
         self.enabled = enabled
 
     def includeFilterOnMethod(self, method: str, filter: types.FunctionType):
-        if (hasattr(_array, '__len__')):
+        if (hasattr(filter, '__len__')):
             for _filter in filter:
                 self.includeFilterOnMethod(method, _filter)
                 return
