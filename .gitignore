@@ -1,0 +1,7 @@
+fastapi_filter/main.py
+env
+fastapi_filter/__pycache__
+tests/__pycache__
+LICENSE.txt
+dist
+filter_api.egg-info

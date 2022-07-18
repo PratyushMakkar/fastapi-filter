@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='filter_api',
-    version='0.1.4',
+    version='0.1.6',
     license='MIT',
     author="Pratyush Makkar",
     description_file = "README.md",
