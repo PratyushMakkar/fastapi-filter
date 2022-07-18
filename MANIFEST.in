@@ -1,1 +1,2 @@
 exclude fastapi_filter/main.py
+include README.md
