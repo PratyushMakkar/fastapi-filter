@@ -8,19 +8,15 @@ from tracemalloc import Filter
 from urllib import request
 
 
-from fastapi.routing import APIRoute
+
 from fastapi import APIRouter, Body, FastAPI, File, Request, Response
 from fastapi.utils import generate_unique_id
 from fastapi import params
 from fastapi.datastructures import Default
 import fastapi
 
-from exceptions import ObjectNotOfTypeRequestError, MissingFilterConfigFileError
 from utils import checkGlobalFilters, loadFiltersFromFile
-from starlette import routing
-from starlette.types import ASGIApp
-from starlette.responses import JSONResponse, Response
-from starlette.routing import BaseRoute, Match
+
 
 from typing import (
     Any,
@@ -58,9 +54,6 @@ class FilterAPIRouter:
         self.prefix = prefix
         self.enabled = enabled
 
-    def enable(self, path: str, filter_classes: array = []) -> Callable:
-        return print                                                        #TODO
-
     def includeFilterOnMethod(self, method: str, filter: types.FunctionType):
         if (isinstance(filter, array.ArrayType)):
             for _filter in filter:
@@ -75,6 +68,10 @@ class FilterAPIRouter:
             self.methodFilters[method].append(filter)
 
         return self
+
+    def enable(self, function, filter_classes: array = []) -> Callable:
+        for filter in filter_classes:
+            self.includeFilterOnMethod(function, filter)
 
     def includeGlobalFilter(self, filter: types.FunctionType): 
         assert isinstance(filter, types.FunctionType); "The implemented filter must be of type: Function"

@@ -88,12 +88,11 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next:  RequestResponseEndpoint) -> Response:
         app: Starlette = request.app
         request_url = request.url
-        print(request_url)
+    
         for route in app.routes:
             match, _ = route.matches(request.scope)
             if match == Match.FULL and hasattr(route, "endpoint"):
                 handler = route.endpoint
-                print(handler)
                 break
             handler = None
         
@@ -104,8 +103,7 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
 
         filter_router = None
         expected_prefix = _prepareRequestURL(request_url)['prefix']
-        print(expected_prefix)
-
+        
         try:
             for filter_route in self.filter_routers:
                 if (filter_route.enabled and filter_route.prefix == expected_prefix):
