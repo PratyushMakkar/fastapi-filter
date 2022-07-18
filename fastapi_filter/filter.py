@@ -15,7 +15,7 @@ from fastapi import params
 from fastapi.datastructures import Default
 import fastapi
 
-from utils import checkGlobalFilters, loadFiltersFromFile
+from fastapi_filter.utils import checkGlobalFilters, loadFiltersFromFile
 
 
 from typing import (
@@ -48,23 +48,24 @@ class FilterAPIRouter:
             if (not key in self.methodFilters):
                 self.methodFilters[key] = method_filters[key]
             else:
-                assert isinstance(self.methodFilters[key], array.ArrayType); "The method filter with key: {0} was not of type array".format(key)
+                assert hasattr(self.methodFilters[key], '__len__'); "The method filter with key: {0} was not of type array".format(key)
                 self.methodFilters[key].extend(method_filters[key])
 
         self.prefix = prefix
         self.enabled = enabled
 
     def includeFilterOnMethod(self, method: str, filter: types.FunctionType):
-        if (isinstance(filter, array.ArrayType)):
+        if (hasattr(_array, '__len__')):
             for _filter in filter:
                 self.includeFilterOnMethod(method, _filter)
-
+                return
+ 
         assert isinstance(filter, types.FunctionType); "The implemented filter must be of type: Function"
         if (not method in self.methodFilters):
             self.methodFilters[method] = [filter]
         else:
             _array = self.methodFilters[method]
-            assert isinstance(_array, array.ArrayType); "methodFilters for the path {0} is not of type Array".format(method)
+            assert hasattr(_array, '__len__'); "methodFilters for the path {0} is not of type Array".format(method)
             self.methodFilters[method].append(filter)
 
         return self
@@ -75,7 +76,7 @@ class FilterAPIRouter:
 
     def includeGlobalFilter(self, filter: types.FunctionType): 
         assert isinstance(filter, types.FunctionType); "The implemented filter must be of type: Function"
-        assert isinstance(self.globalFilters, array.ArrayType); "The global filters for the FilterAPIRouter is not of type Array"
+        assert hasattr(self.globalFilters, '__len__'); "The global filters for the FilterAPIRouter is not of type Array"
         self.globalFilters.append(filter)
         return self
 

@@ -1,7 +1,9 @@
 import array
 import json
 import traceback
-from exceptions import ObjectNotOfTypeRequestError
+
+from fastapi_filter.exceptions import ObjectNotOfTypeRequestError
+
 import fastapi
 from fastapi import File
 

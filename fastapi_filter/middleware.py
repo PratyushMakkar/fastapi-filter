@@ -16,12 +16,13 @@ from starlette.applications import Starlette
 from starlette.requests import Request 
 from starlette.responses import Response
 from starlette.routing import Match
-from exceptions import _handleHTTPException
+
 
 from urllib.parse import urlparse
 
 
-from filter import FilterAPIRouter
+from fastapi_filter.filter import FilterAPIRouter
+from fastapi_filter.exceptions import _handleHTTPException
 
 def _prepareRequestURL(request_url: str) -> dict:
         url_dict = {}
@@ -63,8 +64,8 @@ class CustomFilterMiddleware(BaseHTTPMiddleware):
 
         if (hasattr(filter, "methodFilters")):
             try:
-                filters_array = filter.methodFilters[handler] 
-                filters_array.extend(filter.globalFilters)
+                filters_array = filter.globalFilters
+                filters_array.extend(filter.methodFilters[handler])
                 return filters_array
             except KeyError as err:
                 logging.debug("The method: {0} could not be matched to any filters".format(handler))

@@ -5,7 +5,7 @@ fastapi-filter is a library that allows the client to implement filters for each
 Currently support is limited to ```fastapi ``` and it is a dependency. The project will be expanded to include all applications built on top of ```Starlette```. 
 1. Install the following python libraries
     -  <kbd>pip install fastapi</kbd> 
-2. Add the <kbd>fastapi-filter</kbd> directory into your project directory using the <kbd>git clone</kbd> commpand. 
+2. Add the <kbd>fastapi_filter</kbd> directory into your project directory using the <kbd>git clone</kbd> commpand. 
 ## :pushpin: Quickstart
 
 To begin filtering requests, the ```CustomFilterMiddleware``` class must be configured and registered with our ```Starlette``` application.
@@ -82,10 +82,9 @@ async def HelloWorld():
     return "Hello World"
 ```
 ## Documentation
-1. 
-1. ## :hammer_and_wrench: Contributing to the project
+The documentation is currently a work in progress. You can refer to Examples for examples of implementation. 
+## :hammer_and_wrench: Contributing to the project
 If you would like to contribute to the project, feel free to create a pull request. Make sure that all documentation is present for any changes.  
 ## :scroll: License
-
 The library is licensed under <kbd>GNU GENERAL PUBLIC LICENSE</kbd>
 
